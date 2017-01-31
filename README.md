@@ -2,7 +2,7 @@
 
 Go言語のサポートを提供するVisual Studio Codeの拡張機能 [Microsoft/vscode-go](https://github.com/Microsoft/vscode-go) のドキュメントを日本語に翻訳してみました。
 Google翻訳を使用して翻訳した後に自分でチェックして修正しています。
-翻訳時のvscode-goのバージョンは 0.6.52 で、翻訳元のcommitは [ddb434c](https://github.com/Microsoft/vscode-go/blob/ddb434c0bf96771a0dc6f92d5e95ee737571154f/README.md) です。
+翻訳時のvscode-goのバージョンは 0.6.53 で、翻訳元のcommitは [b9b927d](https://github.com/Microsoft/vscode-go/blob/b9b927dd459002543b13ed57e9890e394b7ba728/README.md) です。
 
 # Go for Visual Studio Code
 
@@ -87,16 +87,16 @@ Goの拡張機能では次のVisual Studio Code設定を使用できます。
 デフォルトのリンターを変更し、より高機能な [Go Meta Linter](https://github.com/alecthomas/gometalinter) を使用することができます。
 パッケージを手動でインストールする必要があることに注意してください: `go get -u github.com/alecthomas/gometalinter` を実行して、構成を編集してください (`go.lintTool` の値を "gometalinter" に設定する)。
 
-Go meta linterはさまざまなリンターのコレクションを使用しますが、それらのリンターも手動でインストールする必要があります。
-いずれかのツールが利用可能な場合、それはデフォルトで使用されます (`golint` はデフォルトではまだ実行されています)。
+デフォルトのリンターを変更し、より高機能な [Go Meta Linter](https://github.com/alecthomas/gometalinter) を使用することができます。
+ユーザー設定で `go.lintTool` を "gometalinter" に設定します。
+
+Go meta linterは拡張機能によってインストールされるさまざまなリンターのコレクションを使用します。
 
 非常に便利なリンターツールのいくつか:
 
 * [errcheck](https://github.com/kisielk/errcheck) は、コード内のチェックされていないエラーをチェックします。
 * [varcheck](https://github.com/opennota/check) は、未使用のグローバル変数と定数を検索します。
 * [deadcode](https://github.com/tsenart/deadcode) は、未使用のコードを検出します。
-
-サポートされているすべてのリンターツールをインストールする場合、gometalinterはインストーラを提供します: `gometalinter --install`
 
 特定のリンターのみを実行したい場合（一部のリンターは遅い）、構成を変更してそれらを指定することができます:
 
@@ -114,9 +114,11 @@ Go meta linterはさまざまなリンターのコレクションを使用しま
 * `Go: Current GOPATH` は、現在設定されているGOPATHを確認します
 * `Go: Run test at cursor` は、アクティブなドキュメントの現在のカーソル位置でテストを実行します
 * `Go: Run tests in current package` は、アクティブなドキュメントを含むパッケージ内のすべてのテストを実行します
+* `Go: Test Previous` は、前に実行したテストコマンドを実行します
 * `Go: Generates unit tests (package)` は、現在のパッケージのユニットテストを生成します
 * `Go: Generates unit tests (file)` は、現在のファイルのユニットテストを生成します
 * `Go: Generates unit tests (function)` は、現在のファイルで選択された関数のユニットテストを生成します
+* `Go: Install Tools` は、拡張機能が依存するすべてのGoツールをインストール/アップデートします。
 
 ### _任意_: デバッグ
 
@@ -134,12 +136,9 @@ VS Codeを使用したリモートデバッグを行うには [リモートデ�
 
 あなたは拡張機能開発中に拡張機能をデバッグするための開発環境をセットアップできます。
 
-はじめに、`~/.vscode/extensions` に拡張機能がインストールされていないことを確認してください。
-つぎに、マシン上のどこか別の場所にリポジトリーをクローンし、`npm install` を実行してCodeの開発インスタンスを開きます。
+本リポジトリーをクローンし、`npm install` を実行してCodeの開発インスタンスを開きます。
 
 ```bash
-rm -rf ~/.vscode/extensions/lukehoban.Go
-cd ~
 git clone https://github.com/Microsoft/vscode-go
 cd vscode-go
 npm install
@@ -149,6 +148,7 @@ code .
 デバッグビューレットに移動し、`Launch Extension` を選択してrun (`F5`) を押します。
 
 `[Extension Development Host]` インスタンスで、GOPATHフォルダーを開きます。
+`[Extension Development Host]` インスタンスで、Goコードで任意のフォルダーを開きます。
 
 ブレークポイントを設定して、拡張機能をステップ実行することができます。
 
@@ -176,6 +176,9 @@ code .
 - gotests: `go get -u -v github.com/cweill/gotests/...`
 
 拡張機能にツール用の別のGOPATHを使用させる場合は、VSCODE_GOTOOLS 環境変数を目的のパスに設定します。
+
+拡張機能にツール用の別のGOPATHを使用させたい場合は、`go.toolsGopath` の設定で目的の場所を指定します。
+`gometalinter` と `dlv` の2つのツールは例外で、あなたのGOPATHにインストールする必要があります。
 
 現在のGOPATHに手動でツールをインストールするには、以下をペーストして実行します:
 
